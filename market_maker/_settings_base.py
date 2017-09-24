@@ -74,8 +74,8 @@ MAX_POSITION = 10000
 ########################################################################################################################
 
 # If true, don't set up any orders, just say what we would do
-# DRY_RUN = True
-DRY_RUN = False
+DRY_RUN = True
+# DRY_RUN = False
 
 # How often to re-check and replace orders.
 # Generally, it's safe to make this short because we're fetching from websockets. But if too many
