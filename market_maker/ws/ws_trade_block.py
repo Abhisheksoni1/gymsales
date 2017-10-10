@@ -1,76 +1,65 @@
 import json
 import logging
-import ssl
 import threading
-from time import sleep
-import websocket
+
+import time
+
 from market_maker.utils import log
-import sys
+import requests
 
 
-class TradeBlockWebsocket(object):
+class TradeBlock(object):
     logger = log.setup_custom_logger('root')
 
-    def __init__(self, key=None):
+    def __init__(self):
 
         self.logger = logging.getLogger('root')
-        self.logger.info("TradeBlock Websock Initalize")
-        self.BASE_URL = "wss://clientapi.tradeblock.com/json/"
-        self.CLIENT_KEY = key
+        self.logger.info("TradeBlock Initalize")
+        self.BASE_URL = "https://api.tradeblock.com/"
+        self.endpoint = "markets/xbx/"
         self.exited = False
-        self.ws_client = websocket.WebSocketApp(self.BASE_URL,
-                                                on_message=self._on_message,
-                                                on_error=self._on_error,
-                                                on_open=self._on_open,
-                                                on_close=self._on_close)
+        self.current_xbx_price = None
+        self.is_continuous = False
 
     def __del__(self):
         self.exit()
 
     def connect(self):
         self.logger.info("Strating Connection...")
-        ssl_defaults = ssl.get_default_verify_paths()
-        sslopt_ca_certs = {'ca_certs': ssl_defaults.cafile}
-        self.wst = threading.Thread(target=lambda: self.ws_client.run_forever(sslopt=sslopt_ca_certs))
-        self.wst.daemon = True
-        self.wst.start()
-        self.logger.info("Started thread")
+        self.get_data()
 
-        # Wait for connect before continuing
-        conn_timeout = 5
-        while (not self.ws_client.sock or not self.ws_client.sock.connected) and conn_timeout:
-            sleep(1)
-            conn_timeout -= 1
+    def get_data(self):
+        self.current_xbx_price = self.__get_data()
+        self.logger.info("XBX Price is ${}".format(self.current_xbx_price))
 
-        if not conn_timeout:
-            self.logger.error("Couldn't connect to WS! Exiting.")
-            self.exit()
-            sys.exit(1)
+    def start_continuous_prices(self):
+        self.is_continuous = True
+        threading.Thread(target=self.__continuous_prices).start()
 
-    def _on_open(self, ws):
-        self.logger.debug("Going to send First Message")
-        self.ws_client.send(json.dumps({'action': 'subscribe', 'channel': 'indices'}))
-        self.logger.info("Subscribe Message Send.")
+    def stop_continuous_prices(self):
+        self.is_continuous = False
 
-    def _on_message(self, ws, message):
-        message = json.loads(message)
-        self.logger.info(json.dumps(message))
+    def __continuous_prices(self):
+        # self.wst = threading.Thread(target=)
+        # self.wst.daemon = True
+        # self.wst.start()
+        while self.is_continuous:
+            self.get_data()
+            time.sleep(0.5)
 
-    def _on_error(self, ws, error):
-        if not self.exited:
-            self.logger.error(error)
-            self.exit()
+    def _parser(self, data):
+        return data['xbx']
 
-    def _on_close(self, ws):
-        self.logger.info('Websocket Closed')
-        self.exit()
+    def __get_data(self):
+        self.logger.info("Getting XBX Prices...")
+        url = self.BASE_URL + self.endpoint
+        data = requests.get(url).text
+        return self._parser(json.loads(data))
 
     def exit(self):
         if not self.exited:
             self.exited = True
-            self.ws_client.close()
-
 
 if __name__=="__main__":
-    tradeblock_ws = TradeBlockWebsocket()
+    tradeblock_ws = TradeBlock()
     tradeblock_ws.connect()
