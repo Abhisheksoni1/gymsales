@@ -62,4 +62,6 @@ class TradeBlock(object):
 
 if __name__=="__main__":
     tradeblock_ws = TradeBlock()
-    tradeblock_ws.connect()
+    tradeblock_ws.start_continuous_prices()
+    time.sleep(100)
+    tradeblock_ws.stop_continuous_prices()
