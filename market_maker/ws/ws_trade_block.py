@@ -25,21 +25,31 @@ class TradeBlock(object):
         self.exit()
 
     def connect(self):
+        """
+         connect to api
+        """
         self.logger.info("Strating Connection...")
         self.get_data()
 
     def get_data(self):
+        """get data by calling its private class method"""
         self.current_xbx_price = self.__get_data()
         self.logger.info("XBX Price is ${}".format(self.current_xbx_price))
 
     def start_continuous_prices(self):
+        """
+        :start continuous stream of data from the tradeblock api and get XBX prices for it
+        with a time difference of 1-2 seconds :
+        """
         self.is_continuous = True
         threading.Thread(target=self.__continuous_prices).start()
 
     def stop_continuous_prices(self):
+        """to stop continuous streaming of data"""
         self.is_continuous = False
 
     def __continuous_prices(self):
+        """private method of class which is call using a saperate thread"""
         # self.wst = threading.Thread(target=)
         # self.wst.daemon = True
         # self.wst.start()

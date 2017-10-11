@@ -204,8 +204,18 @@ class OrderManager:
         # on any error.
         atexit.register(self.exit)
         signal.signal(signal.SIGTERM, self.exit)
-
         logger.info("Using symbol %s." % self.exchange.symbol)
+        self.price_difference = 0
+        self.order_amount = 0
+        self.distance_from_market = 0
+        self._set_parameters()
+
+    def _set_parameters(self):
+        f = open("market_maker/config.txt", 'r').readlines()
+        self.price_difference, self.order_amount, self.distance_from_market = map(lambda x: float(x.split("@")[1]), f)
+        logger.info("Price Difference Set {}".format(self.price_difference))
+        logger.info(("Order Amount Set {}".format(self.order_amount)))
+        logger.info("Distance From Market Set {}".format(self.distance_from_market))
 
     def init(self):
         if settings.DRY_RUN:
@@ -215,7 +225,9 @@ class OrderManager:
 
         self.start_time = datetime.now()
         self.instrument = self.exchange.get_instrument()
+        logger.info("Current Bitmex Price ${}".format(self.instrument['markPrice']))
         self.starting_qty = self.exchange.get_delta()
+        # logger.info(self.starting_qty)
         self.running_qty = self.starting_qty
         self.reset()
 
@@ -225,7 +237,7 @@ class OrderManager:
         self.print_status()
 
         # Create orders and converge.
-        self.place_orders()
+        # self.place_orders()
 
         if settings.DRY_RUN:
             sys.exit()
@@ -544,6 +556,6 @@ def run():
     # Try/except just keeps ctrl-c from printing an ugly stacktrace
     try:
         om.init()
-        om.run_loop()
+        # om.run_loop()
     except (KeyboardInterrupt, SystemExit):
         sys.exit()
