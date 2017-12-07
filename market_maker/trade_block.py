@@ -4,12 +4,12 @@ import threading
 
 import time
 
-from market_maker.utils import log
+# from market_maker.utils import log
 import requests
 
 
 class TradeBlock(object):
-    logger = log.setup_custom_logger('root')
+    # logger = log.setup_custom_logger('root')
 
     def __init__(self):
 
@@ -35,6 +35,7 @@ class TradeBlock(object):
         """get data by calling its private class method"""
         self.current_xbx_price = self.__get_data()
         self.logger.info("XBX Price is ${}".format(self.current_xbx_price))
+        return self.current_xbx_price
 
     def start_continuous_prices(self):
         """
@@ -69,6 +70,7 @@ class TradeBlock(object):
     def exit(self):
         if not self.exited:
             self.exited = True
+
 
 if __name__=="__main__":
     tradeblock_ws = TradeBlock()
