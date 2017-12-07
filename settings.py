@@ -10,8 +10,8 @@ BASE_URL = "https://testnet.bitmex.com/api/v1/"
 # BASE_URL = "https://www.bitmex.com/api/v1/" # Once you're ready, uncomment this.
 
 # The BitMEX API requires permanent API keys. Go to https://testnet.bitmex.com/api/apiKeys to fill these out.
-API_KEY = "CcI7sODQfMcjVIbpLn3M65_N"
-API_SECRET = "oY8-GBay1k6CwRLc3N36IdbpTcPMZ0DAPjKX2LbkVC5eTB4d"
+API_KEY = "omwY-ILCkDptTpywi5DQb3-Q"
+API_SECRET = "MuJ1iulAvW_PHZO-WNhy9nlH4Gg6ZQF8_JAbB3OrNlqPPCsQ"
 
 
 ########################################################################################################################
@@ -68,6 +68,11 @@ CHECK_POSITION_LIMITS = False
 MIN_POSITION = -10000
 MAX_POSITION = 10000
 
+# If True, will only send orders that rest in the book (ExecInst: ParticipateDoNotInitiate).
+# Use to guarantee a maker rebate.
+# However -- orders that would have matched immediately will instead cancel, and you may end up with
+# unexpected delta. Be careful.
+POST_ONLY = False
 
 ########################################################################################################################
 # Misc Behavior, Technicals
@@ -111,3 +116,7 @@ WATCHED_FILES = [join("market_maker", f) for f in ["market_maker.py", "bitmex.py
 
 # Specify the contracts that you hold. These will be used in portfolio calculations.
 CONTRACTS = ['XBTUSD']
+price_difference = 30
+
+order_amount = 100
+distance_from_market = 10
