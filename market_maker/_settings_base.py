@@ -10,8 +10,8 @@ BASE_URL = "https://testnet.bitmex.com/api/v1/"
 # BASE_URL = "https://www.bitmex.com/api/v1/" # Once you're ready, uncomment this.
 
 # The BitMEX API requires permanent API keys. Go to https://testnet.bitmex.com/api/apiKeys to fill these out.
-API_KEY = "6oRDvggrYjr1DxVltQ1Lxp4N"
-API_SECRET = "5EFuvYJOX4GjpUHf2Qr6aVwJpN7ke-W2PCAiD9Mgai7uQKZ8"
+API_KEY = ""
+API_SECRET = ""
 
 
 ########################################################################################################################
@@ -68,14 +68,19 @@ CHECK_POSITION_LIMITS = False
 MIN_POSITION = -10000
 MAX_POSITION = 10000
 
+# If True, will only send orders that rest in the book (ExecInst: ParticipateDoNotInitiate).
+# Use to guarantee a maker rebate.
+# However -- orders that would have matched immediately will instead cancel, and you may end up with
+# unexpected delta. Be careful.
+POST_ONLY = False
 
 ########################################################################################################################
 # Misc Behavior, Technicals
 ########################################################################################################################
 
 # If true, don't set up any orders, just say what we would do
-DRY_RUN = True
-# DRY_RUN = False
+# DRY_RUN = True
+DRY_RUN = False
 
 # How often to re-check and replace orders.
 # Generally, it's safe to make this short because we're fetching from websockets. But if too many
