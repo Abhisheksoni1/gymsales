@@ -34,7 +34,7 @@ class TradeBlock(object):
     def get_data(self):
         """get data by calling its private class method"""
         self.current_xbx_price = self.__get_data()
-        self.logger.info("XBX Price is ${}".format(self.current_xbx_price))
+        # self.logger.info("XBX Price is ${}".format(self.current_xbx_price))
         return self.current_xbx_price
 
     def start_continuous_prices(self):
@@ -62,7 +62,7 @@ class TradeBlock(object):
         return data['xbx']
 
     def __get_data(self):
-        self.logger.info("Getting XBX Prices...")
+        # self.logger.info("Getting XBX Prices...")
         url = self.BASE_URL + self.endpoint
         data = requests.get(url).text
         return self._parser(json.loads(data))
