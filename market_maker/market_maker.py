@@ -330,7 +330,7 @@ class OrderManager:
     def place_orders(self):
         """Create order items for use in convergence."""
         if (self.current_xbx_price - self.current_xbx_price) > self.price_difference:
-            print("placing order XBX price is more than threshold price")
+            logger.info("placing order XBX price is more than threshold price")
             self.exchange.place_order(side='buy', quantity=self.order_amount,
                                       price=self.current_bitmex_price - self.distance_from_market)
         # buy_orders = []
@@ -472,13 +472,13 @@ class OrderManager:
         # Ensure market is still open.
         self.exchange.check_market_open()
 
-        print("getting data for current XBX price from trade block......")
+        logger.info("getting data for current XBX price from trade block......")
         t = trade_block.TradeBlock()
         self.current_xbx_price = t.get_data()
 
         self.current_bitmex_price = self.get_ticker()['buy']
-        print("current XBX price is {}".format(self.current_xbx_price))
-        print("current BITMEX price is {}".format(self.current_bitmex_price))
+        logger.info("current XBX price is {}".format(self.current_xbx_price))
+        logger.info("current BITMEX price is {}".format(self.current_bitmex_price))
 
         # Get ticker, which sets price offsets and prints some debugging info.
         # ticker = self.get_ticker()
