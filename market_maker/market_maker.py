@@ -329,7 +329,7 @@ class OrderManager:
 
     def place_orders(self):
         """Create order items for use in convergence."""
-        if (self.current_xbx_price - self.current_xbx_price) > self.price_difference:
+        if (self.current_xbx_price - self.current_bitmex_price) > self.price_difference:
             logger.info("placing order XBX price is more than threshold price")
             self.exchange.place_order(side='buy', quantity=self.order_amount,
                                       price=self.current_bitmex_price - self.distance_from_market)
