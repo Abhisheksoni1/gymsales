@@ -30,7 +30,11 @@ class ExchangeInterface:
             self.symbol = sys.argv[1]
         else:
             self.symbol = settings.SYMBOL
-        self.bitmex = bitmex.BitMEX(base_url=settings.BASE_URL, symbol=self.symbol,
+        url = settings.BASE_URL
+        if settings.MODE == "TEST":
+            url = settings.BASE_URL_TESTING
+
+        self.bitmex = bitmex.BitMEX(base_url=url, symbol=self.symbol,
                                     apiKey=settings.API_KEY, apiSecret=settings.API_SECRET,
                                     orderIDPrefix=settings.ORDERID_PREFIX, postOnly=settings.POST_ONLY)
 
